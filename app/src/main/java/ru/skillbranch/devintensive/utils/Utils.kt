@@ -58,7 +58,7 @@ object Utils {
             val isUpperCase = char.isUpperCase()
             val correctPair: Pair<String,String>? = rule_pairs.find { it.first == char.toLowerCase().toString() }
             var newChar = correctPair?.second
-            if (isUpperCase) newChar = newChar?.toUpperCase()
+            if (isUpperCase) newChar = newChar?.capitalize()
             newChars.append(newChar ?: char)
         }
         return newChars.toString()
