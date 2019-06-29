@@ -13,32 +13,26 @@ data class User(
     var lastVisit : Date? = Date(),
     var isOnline : Boolean = false
 ) {
-    constructor(
-        id: String,
-        firstName: String?,
-        lastName: String?
-    ): this(id, firstName, lastName, null)
-
-    constructor(id: String): this(id, "John","Doe")
-
-    init {
-        println("It's Alive!!! \n${if(lastName == "Doe") "His name id $firstName $lastName"
-        else "And his name is $firstName $lastName"} ")
-    }
 
     fun printMe(){
         println(this.toString())
     }
 
-    companion object Factory{
+    companion object{
 
         private var lastId: Int = -1
 
         fun makeUser(fullName: String?): User {
             lastId++
             val (firstName, lastName) = Utils.parseFullName(fullName)
-            return User(id = "$lastId", firstName = firstName, lastName = lastName)
+            return User(
+                id = "$lastId",
+                firstName = firstName,
+                lastName = lastName,
+                avatar = null)
         }
+
+        fun Builder(): UserBuilder = UserBuilder()
     }
 
 }
