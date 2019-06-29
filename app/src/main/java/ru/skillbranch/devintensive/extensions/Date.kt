@@ -47,10 +47,10 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val isPast = rawDiff.sign >= 0
     val diff = abs(date.time - this.time)
     return when {
-        diff < 1*SECOND -> "только что"
-        diff < 45*SECOND -> "несколько секунд".getProperDateWord(isPast)
-        diff < 75*SECOND -> "минуту".getProperDateWord(isPast)
-        diff < 45* MINUTE -> {
+        diff <= 1*SECOND -> "только что"
+        diff <= 45*SECOND -> "несколько секунд".getProperDateWord(isPast)
+        diff <= 75*SECOND -> "минуту".getProperDateWord(isPast)
+        diff <= 45* MINUTE -> {
             val minutes = diff / MINUTE
             val text =  when {
                 (minutes / 10) == 1L -> "$minutes минут"
@@ -61,8 +61,8 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             return text.getProperDateWord(isPast)
         }
 
-        diff < 75* MINUTE -> "час".getProperDateWord(isPast)
-        diff < 22* HOUR -> {
+        diff <= 75* MINUTE -> "час".getProperDateWord(isPast)
+        diff <= 22* HOUR -> {
             val hours = diff/ HOUR
             return when {
                 (hours / 10) == 1L -> "$hours часов"
@@ -71,8 +71,8 @@ fun Date.humanizeDiff(date: Date = Date()): String {
                 else -> "$hours часов"
             }.getProperDateWord(isPast)
         }
-        diff < 26* HOUR -> "день".getProperDateWord(isPast)
-        diff < 360* DAY -> {
+        diff <= 26* HOUR -> "день".getProperDateWord(isPast)
+        diff <= 360* DAY -> {
             val days = diff/DAY
             return when {
                 (days / 10) == 1L -> "$days дней"
