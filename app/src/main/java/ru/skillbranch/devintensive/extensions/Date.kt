@@ -42,6 +42,17 @@ fun String.getProperDateWord(isPast: Boolean): String{
     return result.toString()
 }
 
+enum class IntEndingType {
+    ONE, FEW, MANY
+}
+fun Long.getEndingType(): IntEndingType {
+    return when {
+        this % 10L == 1L && this % 100L != 11L -> IntEndingType.ONE
+        this % 10L in (2L..4L) && this % 100L !in (12L..14L) -> IntEndingType.FEW
+        else -> IntEndingType.MANY
+    }
+}
+
 fun Date.humanizeDiff(date: Date = Date()): String {
     val rawDiff = date.time - this.time
     val isPast = rawDiff.sign >= 0
@@ -52,11 +63,10 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         diff <= 75*SECOND -> "минуту".getProperDateWord(isPast)
         diff <= 45* MINUTE -> {
             val minutes = diff / MINUTE
-            val text =  when {
-                (minutes / 10) == 1L -> "$minutes минут"
-                (minutes % 10) == 1L -> "$minutes минуту"
-                (minutes % 10) in (2..4) -> "$minutes минуты"
-                else -> "$minutes минут"
+            val text =  when(minutes.getEndingType()) {
+                IntEndingType.ONE -> "$minutes минуту"
+                IntEndingType.FEW -> "$minutes минуты"
+                IntEndingType.MANY -> "$minutes минут"
             }
             return text.getProperDateWord(isPast)
         }
@@ -64,21 +74,19 @@ fun Date.humanizeDiff(date: Date = Date()): String {
         diff <= 75* MINUTE -> "час".getProperDateWord(isPast)
         diff <= 22* HOUR -> {
             val hours = diff/ HOUR
-            return when {
-                (hours / 10) == 1L -> "$hours часов"
-                (hours % 10) == 1L -> "$hours час"
-                (hours % 10) in (2L..4L) -> "$hours часа"
-                else -> "$hours часов"
+            return when(hours.getEndingType()) {
+                IntEndingType.ONE -> "$hours час"
+                IntEndingType.FEW -> "$hours часа"
+                IntEndingType.MANY -> "$hours часов"
             }.getProperDateWord(isPast)
         }
         diff <= 26* HOUR -> "день".getProperDateWord(isPast)
         diff <= 360* DAY -> {
             val days = diff/DAY
-            return when {
-                (days / 10) == 1L -> "$days дней"
-                (days % 10) == 1L -> "$days день"
-                (days % 10) in (2..4) -> "$days дня"
-                else -> "$days дней"
+            return when(days.getEndingType()) {
+                IntEndingType.ONE -> "$days день"
+                IntEndingType.FEW -> "$days дня"
+                IntEndingType.MANY -> "$days дней"
             }.getProperDateWord(isPast)
         }
         isPast -> "более года назад"
