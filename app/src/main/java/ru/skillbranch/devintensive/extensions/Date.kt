@@ -32,38 +32,67 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 }
 
 enum class TimeUnits {
-    SECOND, MINUTE, HOUR, DAY
-}
+    SECOND, MINUTE, HOUR, DAY;
+    fun plural(count: Int): String {
+        val intType = count.toLong().getEndingType()
+        val unit = when (this) {
+            TimeUnits.SECOND -> when (intType) {
+                IntEndingType.ONE -> "секунду"
+                IntEndingType.FEW -> "секунды"
+                IntEndingType.MANY -> "секунд"
+            }
 
-fun TimeUnits.plural(count: Int): String {
-    val intType = count.toLong().getEndingType()
-    val unit = when (this) {
-        TimeUnits.SECOND -> when (intType) {
-            IntEndingType.ONE -> "секунду"
-            IntEndingType.FEW -> "секунды"
-            IntEndingType.MANY -> "секунд"
-        }
+            TimeUnits.MINUTE -> when (intType) {
+                IntEndingType.ONE -> "минуту"
+                IntEndingType.FEW -> "минуты"
+                IntEndingType.MANY -> "минут"
+            }
 
-        TimeUnits.MINUTE -> when (intType) {
-            IntEndingType.ONE -> "минуту"
-            IntEndingType.FEW -> "минуты"
-            IntEndingType.MANY -> "минут"
-        }
+            TimeUnits.HOUR -> when (intType) {
+                IntEndingType.ONE -> "час"
+                IntEndingType.FEW -> "часа"
+                IntEndingType.MANY -> "часов"
+            }
 
-        TimeUnits.HOUR -> when (intType) {
-            IntEndingType.ONE -> "час"
-            IntEndingType.FEW -> "часа"
-            IntEndingType.MANY -> "часов"
+            TimeUnits.DAY -> when (intType) {
+                IntEndingType.ONE -> "день"
+                IntEndingType.FEW -> "дня"
+                IntEndingType.MANY -> "дней"
+            }
         }
-
-        TimeUnits.DAY -> when (intType) {
-            IntEndingType.ONE -> "день"
-            IntEndingType.FEW -> "дня"
-            IntEndingType.MANY -> "дней"
-        }
+        return "$count $unit"
     }
-    return "$count $unit"
 }
+
+//fun TimeUnits.plural(count: Int): String {
+//    val intType = count.toLong().getEndingType()
+//    val unit = when (this) {
+//        TimeUnits.SECOND -> when (intType) {
+//            IntEndingType.ONE -> "секунду"
+//            IntEndingType.FEW -> "секунды"
+//            IntEndingType.MANY -> "секунд"
+//        }
+//
+//        TimeUnits.MINUTE -> when (intType) {
+//            IntEndingType.ONE -> "минуту"
+//            IntEndingType.FEW -> "минуты"
+//            IntEndingType.MANY -> "минут"
+//        }
+//
+//        TimeUnits.HOUR -> when (intType) {
+//            IntEndingType.ONE -> "час"
+//            IntEndingType.FEW -> "часа"
+//            IntEndingType.MANY -> "часов"
+//        }
+//
+//        TimeUnits.DAY -> when (intType) {
+//            IntEndingType.ONE -> "день"
+//            IntEndingType.FEW -> "дня"
+//            IntEndingType.MANY -> "дней"
+//        }
+//    }
+//    return "$count $unit"
+//}
 
 fun String.getProperDateWord(isPast: Boolean): String {
     val result = StringBuilder(this)
