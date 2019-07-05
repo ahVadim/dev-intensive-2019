@@ -16,11 +16,11 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     return dateFormat.format(this)
 }
 
-fun Date.add(value:Int, units: TimeUnits = TimeUnits.SECOND): Date{
+fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 
     var time = this.time
 
-    time += when(units){
+    time += when (units) {
         TimeUnits.SECOND -> value * SECOND
         TimeUnits.MINUTE -> value * MINUTE
         TimeUnits.HOUR -> value * HOUR
@@ -31,11 +31,41 @@ fun Date.add(value:Int, units: TimeUnits = TimeUnits.SECOND): Date{
     return this
 }
 
-enum class TimeUnits{
+enum class TimeUnits {
     SECOND, MINUTE, HOUR, DAY
 }
 
-fun String.getProperDateWord(isPast: Boolean): String{
+fun TimeUnits.plural(count: Int): String {
+    val intType = count.toLong().getEndingType()
+    val unit = when (this) {
+        TimeUnits.SECOND -> when (intType) {
+            IntEndingType.ONE -> "секунду"
+            IntEndingType.FEW -> "секунды"
+            IntEndingType.MANY -> "секунд"
+        }
+
+        TimeUnits.MINUTE -> when (intType) {
+            IntEndingType.ONE -> "минуту"
+            IntEndingType.FEW -> "минуты"
+            IntEndingType.MANY -> "минут"
+        }
+
+        TimeUnits.HOUR -> when (intType) {
+            IntEndingType.ONE -> "час"
+            IntEndingType.FEW -> "часа"
+            IntEndingType.MANY -> "часов"
+        }
+
+        TimeUnits.DAY -> when (intType) {
+            IntEndingType.ONE -> "день"
+            IntEndingType.FEW -> "дня"
+            IntEndingType.MANY -> "дней"
+        }
+    }
+    return "$count $unit"
+}
+
+fun String.getProperDateWord(isPast: Boolean): String {
     val result = StringBuilder(this)
     if (isPast) result.append(" назад")
     else result.insert(0, "через ")
@@ -45,6 +75,7 @@ fun String.getProperDateWord(isPast: Boolean): String{
 enum class IntEndingType {
     ONE, FEW, MANY
 }
+
 fun Long.getEndingType(): IntEndingType {
     return when {
         this % 10L == 1L && this % 100L != 11L -> IntEndingType.ONE
@@ -58,12 +89,12 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     val isPast = rawDiff.sign >= 0
     val diff = abs(date.time - this.time)
     return when {
-        diff <= 1*SECOND -> "только что"
-        diff <= 45*SECOND -> "несколько секунд".getProperDateWord(isPast)
-        diff <= 75*SECOND -> "минуту".getProperDateWord(isPast)
-        diff <= 45* MINUTE -> {
+        diff <= 1 * SECOND -> "только что"
+        diff <= 45 * SECOND -> "несколько секунд".getProperDateWord(isPast)
+        diff <= 75 * SECOND -> "минуту".getProperDateWord(isPast)
+        diff <= 45 * MINUTE -> {
             val minutes = diff / MINUTE
-            val text =  when(minutes.getEndingType()) {
+            val text = when (minutes.getEndingType()) {
                 IntEndingType.ONE -> "$minutes минуту"
                 IntEndingType.FEW -> "$minutes минуты"
                 IntEndingType.MANY -> "$minutes минут"
@@ -71,19 +102,19 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             return text.getProperDateWord(isPast)
         }
 
-        diff <= 75* MINUTE -> "час".getProperDateWord(isPast)
-        diff <= 22* HOUR -> {
-            val hours = diff/ HOUR
-            return when(hours.getEndingType()) {
+        diff <= 75 * MINUTE -> "час".getProperDateWord(isPast)
+        diff <= 22 * HOUR -> {
+            val hours = diff / HOUR
+            return when (hours.getEndingType()) {
                 IntEndingType.ONE -> "$hours час"
                 IntEndingType.FEW -> "$hours часа"
                 IntEndingType.MANY -> "$hours часов"
             }.getProperDateWord(isPast)
         }
-        diff <= 26* HOUR -> "день".getProperDateWord(isPast)
-        diff <= 360* DAY -> {
-            val days = diff/DAY
-            return when(days.getEndingType()) {
+        diff <= 26 * HOUR -> "день".getProperDateWord(isPast)
+        diff <= 360 * DAY -> {
+            val days = diff / DAY
+            return when (days.getEndingType()) {
                 IntEndingType.ONE -> "$days день"
                 IntEndingType.FEW -> "$days дня"
                 IntEndingType.MANY -> "$days дней"
