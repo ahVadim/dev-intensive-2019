@@ -18,12 +18,12 @@ class Bender(
 
         when (question) {
             Question.NAME -> {
-                if (answer.first().isLowerCase()) {
+                if (answer.firstOrNull()?.isLowerCase() == true) {
                     return "Имя должно начинаться с заглавной буквы\n${question.question}" to status.color
                 }
             }
             Question.PROFESSION -> {
-                if (answer.first().isUpperCase()){
+                if (answer.firstOrNull()?.isUpperCase() == true){
                     return "Профессия должна начинаться со строчной буквы\n${question.question}" to status.color
                 }
             }
