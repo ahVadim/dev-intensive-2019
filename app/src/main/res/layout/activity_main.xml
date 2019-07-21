@@ -38,6 +38,8 @@
                 android:id="@+id/et_message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:inputType="text"
                 android:layout_weight="1"
                 android:lines="1"
                 android:textColor="@color/color_gray_light"
@@ -46,7 +48,8 @@
                 android:paddingTop="@dimen/spacing_normal_16"
                 android:paddingBottom="@dimen/spacing_normal_16"
                 android:layout_marginLeft="@dimen/spacing_normal_16"
-                android:layout_marginRight="@dimen/spacing_normal_16"/>
+                android:layout_marginRight="@dimen/spacing_normal_16"
+        />
 
         <ImageView
                 android:id="@+id/iv_send"
@@ -54,7 +57,7 @@
                 android:layout_height="@dimen/spacing_large_24"
                 android:src="@drawable/ic_send_black_24dp"
                 android:layout_gravity="center"
-        android:layout_marginRight="@dimen/spacing_normal_16"/>
+                android:layout_marginRight="@dimen/spacing_normal_16"/>
 
     </LinearLayout>
 
