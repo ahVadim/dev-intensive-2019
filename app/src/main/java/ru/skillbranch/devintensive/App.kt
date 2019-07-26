@@ -2,6 +2,8 @@ package ru.skillbranch.devintensive
 
 import android.app.Application
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
+import ru.skillbranch.devintensive.repositories.PreferencesRepository
 
 class App: Application() {
 
@@ -17,6 +19,9 @@ class App: Application() {
     }
 
     override fun onCreate() {
+        PreferencesRepository.getAppTheme().also {
+            AppCompatDelegate.setDefaultNightMode(it)
+        }
         super.onCreate()
 
     }
