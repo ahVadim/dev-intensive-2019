@@ -33,7 +33,7 @@
                 android:background="@drawable/btn_round_bg"
                 android:src="@drawable/ic_switch_day_night" />
 
-            <ImageView
+            <ru.skillbranch.devintensive.ui.custom.CircleImageView
                 android:id="@+id/iv_avatar"
                 android:layout_width="@dimen/avatar_round_size"
                 android:layout_height="@dimen/avatar_round_size"
@@ -237,6 +237,7 @@
             android:src="@drawable/ic_repo" />
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/wr_repository"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
