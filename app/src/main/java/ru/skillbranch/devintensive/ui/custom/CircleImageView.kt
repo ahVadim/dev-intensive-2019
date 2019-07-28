@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.annotation.Dimension.DP
@@ -16,7 +18,7 @@ class CircleImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): ImageView(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
     private var borderColor = Color.WHITE
     @Dimension(unit = DP)
@@ -62,38 +64,64 @@ class CircleImageView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
 //        super.onDraw(canvas)
 //        canvas?.drawBitmap(mask, 0f, 0f, justPaint)
-        canvas?.drawOval( 0f, 0f, width.toFloat(), height.toFloat(), justPaint
-            .apply { shader = BitmapShader(drawable.toBitmap(width, height), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT) })
-        canvas?.drawOval(0f, 0f, width.toFloat(), height.toFloat(), borderPaint)
+//        drawable.draw(canvas)
+        canvas?.drawOval(0f, 0f, width.toFloat(), height.toFloat(), justPaint
+            .apply {
+                shader = BitmapShader(drawable.toBitmap(width, height), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+            })
+        canvas?.drawOval(borderWidth*0.5f, borderWidth*0.5f, width.toFloat()-borderWidth*0.5f, height.toFloat()-borderWidth*0.5f, borderPaint)
     }
 
     @Dimension
-    fun getBorderWidth():Int{
+    fun getBorderWidth(): Int {
         return convertPixelsToDp(borderWidth, context).toInt()
     }
 
-    fun setBorderWidth(@Dimension dp:Int) {
+    fun setBorderWidth(@Dimension dp: Int) {
         borderWidth = convertDpToPixels(dp.toFloat(), context)
         borderPaint.strokeWidth = borderWidth
         invalidate()
     }
 
-    fun getBorderColor():Int {
+    fun getBorderColor(): Int {
         return borderColor
     }
 
-    fun setBorderColor(hex:String){
+    fun setBorderColor(hex: String) {
         borderColor = Color.parseColor(hex)
         borderPaint.color = borderColor
         invalidate()
     }
 
-    fun setBorderColor(@ColorRes colorId: Int){
+    fun setBorderColor(@ColorRes colorId: Int) {
         borderColor = colorId
         borderPaint.color = borderColor
         invalidate()
     }
 
+    fun showText(text: String) {
+        // ascent() is negative
+//        val width = (paint.measureText(text) + 0.5f).toInt() // round
+//        val height = (baseline + paint.descent() + 0.5f).toInt()
+        this.post{
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.textSize = width.toFloat() * 0.4f
+            paint.color = Color.WHITE
+            paint.textAlign = Paint.Align.CENTER
+            val baseline = height*0.5f - (paint.descent()+paint.ascent())*0.5f
+            val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(image)
+            val typedValue = TypedValue()
+            val theme = context.getTheme()
+            theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
+            @ColorInt val color = typedValue.data
+            canvas.drawColor(color)
+            canvas.drawText(text, width.toFloat()/2, baseline, paint)
+            setImageBitmap(image)
+            invalidate()
+        }
+
+    }
 
 
     fun convertDpToPixels(dp: Float, context: Context): Float {

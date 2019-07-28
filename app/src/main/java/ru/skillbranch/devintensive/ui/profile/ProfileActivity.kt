@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 import java.net.URL
 
@@ -49,6 +50,10 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateUI(profile: Profile) {
+        val initials = Utils.toInitials(profile.firstName, profile.lastName)
+        initials?.let {
+            iv_avatar.showText(it)
+        }
         profile.toMap().also {
             for ((k, v) in viewFields) {
                 v.text = it[k].toString()
@@ -180,5 +185,9 @@ class ProfileActivity : AppCompatActivity() {
         "login",
         "join"
     )
+
+//    Реализуй программное преобразование инициалов пользователя
+//    (если доступны - заполнено хотя бы одно поле) в Drawable с фоном colorAccent (c учетом темы)
+//    и буквами инициалов (colorWhite) и установи полученное изображение как изображение по умолчанию для профиля пользователя
 
 }
