@@ -118,7 +118,6 @@ class CircleImageView @JvmOverloads constructor(
             canvas.drawColor(color)
             canvas.drawText(text, width.toFloat()/2, baseline, paint)
             setImageBitmap(image)
-            invalidate()
         }
 
     }
