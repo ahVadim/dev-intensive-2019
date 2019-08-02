@@ -52,7 +52,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateUI(profile: Profile) {
         val initials = Utils.toInitials(profile.firstName, profile.lastName)
         initials?.let {
-            iv_avatar.showText(it)
+            iv_avatar.generateAvatar(it, theme)
         }
         profile.toMap().also {
             for ((k, v) in viewFields) {

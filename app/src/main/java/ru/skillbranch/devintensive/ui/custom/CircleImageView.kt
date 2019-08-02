@@ -1,6 +1,7 @@
 package ru.skillbranch.devintensive.ui.custom
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.DisplayMetrics
@@ -99,7 +100,7 @@ class CircleImageView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun showText(text: String) {
+    fun generateAvatar(text: String, theme: Resources.Theme) {
         // ascent() is negative
 //        val width = (paint.measureText(text) + 0.5f).toInt() // round
 //        val height = (baseline + paint.descent() + 0.5f).toInt()
@@ -112,7 +113,6 @@ class CircleImageView @JvmOverloads constructor(
             val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(image)
             val typedValue = TypedValue()
-            val theme = context.getTheme()
             theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
             @ColorInt val color = typedValue.data
             canvas.drawColor(color)
