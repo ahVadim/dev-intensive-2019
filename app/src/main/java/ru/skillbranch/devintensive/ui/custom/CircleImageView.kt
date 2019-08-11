@@ -3,6 +3,7 @@ package ru.skillbranch.devintensive.ui.custom
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
@@ -11,7 +12,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.annotation.Dimension.DP
-import androidx.core.graphics.drawable.toBitmap
 import ru.skillbranch.devintensive.R
 
 
@@ -68,9 +68,24 @@ class CircleImageView @JvmOverloads constructor(
 //        drawable.draw(canvas)
         canvas?.drawOval(0f, 0f, width.toFloat(), height.toFloat(), justPaint
             .apply {
-                shader = BitmapShader(drawable.toBitmap(width, height), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+                shader = BitmapShader(getBitmapFromDrawable(), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
             })
         canvas?.drawOval(borderWidth*0.5f, borderWidth*0.5f, width.toFloat()-borderWidth*0.5f, height.toFloat()-borderWidth*0.5f, borderPaint)
+    }
+
+    private fun getBitmapFromDrawable(): Bitmap? {
+        if (drawable == null)
+            return null
+
+        if (drawable is BitmapDrawable)
+            return (drawable as BitmapDrawable).bitmap
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        return bitmap
     }
 
     @Dimension

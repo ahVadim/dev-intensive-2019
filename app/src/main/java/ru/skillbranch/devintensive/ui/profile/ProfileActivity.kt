@@ -42,7 +42,6 @@ class ProfileActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
-
     }
 
     private fun updateTheme(mode: Int) {
@@ -52,7 +51,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun updateUI(profile: Profile) {
         val initials = Utils.toInitials(profile.firstName, profile.lastName)
         initials?.let {
-            iv_avatar.generateAvatar(it, theme)
+            if (it.isNotEmpty()) iv_avatar.generateAvatar(it, theme)
         }
         profile.toMap().also {
             for ((k, v) in viewFields) {
