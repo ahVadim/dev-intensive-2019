@@ -6,7 +6,6 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Patterns
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -18,7 +17,6 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
-import java.net.URL
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -89,8 +87,9 @@ class ProfileActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 p0?.let {
-                    if (it.isNotEmpty() && !isRepositoryValid(it.toString())) wr_repository.error = "Невалидный адрес репозитория"
-                    else wr_repository.error = ""
+                    val isError = it.isNotEmpty() && isRepositoryValid(it.toString())
+                    wr_repository.isErrorEnabled = isError
+                    wr_repository.error = if (isError) "Невалидный адрес репозитория" else null
                 }
             }
 
@@ -142,7 +141,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun saveProfileInfo() {
-        if (!isRepositoryValid(et_repository.text.toString())) et_repository.setText("")
+        if (isRepositoryValid(et_repository.text.toString())) et_repository.setText("")
         Profile(
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
@@ -153,21 +152,36 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    fun isRepositoryValid(text: String): Boolean {
-        var url = text
-        if (!Patterns.WEB_URL.matcher(url.toLowerCase()).matches()) return false
-        if (!url.contains("https://"))  url = "https://$text"
-        try {
-            val mUrl = URL(url.toLowerCase())
-            if (!mUrl.host.contains("github.com")) return false
-            exclusions.forEach {
-                if (mUrl.path.contains(it)||mUrl.path.replaceFirst("/", "").isEmpty()) return false
-            }
-            return true
-        } catch (e: Exception){
-            return false
-        }
+    private fun isRepositoryValid(repoText: String): Boolean {
+        val regexStr = "^(https:\\/\\/)?(www\\.)?(github\\.com\\/)(?!(${getRegexExceptions()})(?=\\/|\$))[a-zA-Z\\d](?:[a-zA-Z\\d]|-(?=[a-zA-Z\\d])){0,38}(\\/)?$"
+        val regex = Regex(regexStr)
+
+        return (repoText.isNotEmpty() && !regex.matches(repoText))
     }
+
+    private fun getRegexExceptions(): String {
+        val exceptions = arrayOf(
+            "enterprise", "features", "topics", "collections", "trending", "events", "marketplace", "pricing",
+            "nonprofit", "customer-stories", "security", "login", "join"
+        )
+        return exceptions.joinToString("|")
+    }
+
+//    fun isRepositoryValid(text: String): Boolean {
+//        var url = text
+//        if (!Patterns.WEB_URL.matcher(url.toLowerCase()).matches()) return false
+//        if (!url.contains("https://"))  url = "https://$text"
+//        try {
+//            val mUrl = URL(url.toLowerCase())
+//            if (!mUrl.host.contains("github.com")) return false
+//            exclusions.forEach {
+//                if (mUrl.path.contains(it)||mUrl.path.replaceFirst("/", "").isEmpty()) return false
+//            }
+//            return true
+//        } catch (e: Exception){
+//            return false
+//        }
+//    }
 
     val exclusions = listOf(
         "enterprise",
