@@ -1,8 +1,5 @@
 package ru.skillbranch.devintensive.utils
 
-import ru.skillbranch.devintensive.models.User
-import java.lang.StringBuilder
-
 object Utils {
 
     fun parseFullName(fullName: String?): Pair<String?, String?> {
@@ -52,7 +49,7 @@ object Utils {
             "я" to "ya",
             " " to divider
         )
-        val chars = payload.toCharArray()
+        val chars = payload.trim().toCharArray()
         val newChars = StringBuilder()
         chars.forEach { char ->
             val isUpperCase = char.isUpperCase()

@@ -12,6 +12,8 @@ import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.annotation.Dimension.DP
+import androidx.core.content.ContextCompat
+import ru.skillbranch.devintensive.App
 import ru.skillbranch.devintensive.R
 
 
@@ -110,7 +112,7 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     fun setBorderColor(@ColorRes colorId: Int) {
-        borderColor = colorId
+        borderColor = ContextCompat.getColor(App.applicationContext(), colorId)
         borderPaint.color = borderColor
         invalidate()
     }
